@@ -3,7 +3,7 @@ import google.generativeai as gen_ai
 import io
 
 # Configuration de l'API
-GEN_API_KEY = "AIzaSyBmgCgeR2Ak4qZf8NItR-5j_VRsrrng-QY"  # Remplacez par votre clé API
+GEN_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  # Remplacez par votre clé API
 gen_ai.configure(api_key=GEN_API_KEY)
 
 # Fonction pour télécharger le fichier PDF et générer la réponse
