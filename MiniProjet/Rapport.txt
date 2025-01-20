@@ -1,0 +1,126 @@
+### Rapport sur le Développement de l'Application d'Analyse Générative
+
+#### Introduction
+
+Ce projet vise à développer une application web utilisant **Streamlit**, **Google Generative AI** et **Pillow** pour traiter et analyser des fichiers multimédia, notamment des images et des fichiers PDF, tout en intégrant un chatbot génératif. L'application permet à l'utilisateur de charger des fichiers d'images ou des documents PDF et de poser des questions afin d'obtenir des réponses générées par un modèle d'intelligence artificielle.
+
+Le projet se divise en plusieurs parties principales : la configuration des outils nécessaires, la gestion des fichiers téléchargés, l'intégration des modèles IA pour l'analyse des images et des PDF, ainsi que la création d'un chatbot interactif.
+
+---
+
+### 1. Configuration Initiale et Bibliothèques Utilisées
+
+#### 1.1. Streamlit
+
+**Streamlit** a été utilisé pour construire l'interface utilisateur de l'application. C'est une bibliothèque Python permettant de créer rapidement des applications web interactives, idéale pour un prototype d'application d'analyse de données.
+
+#### 1.2. Google Generative AI
+
+Nous avons utilisé l'API de **Google Generative AI** (via la bibliothèque `google.generativeai`) pour interagir avec un modèle d'IA générative. Cette API nous permet de charger des fichiers et de générer des réponses aux questions posées par l'utilisateur en lien avec les contenus des fichiers.
+
+#### 1.3. Pillow
+
+**Pillow** est une bibliothèque Python pour le traitement d'images, utilisée ici pour charger et traiter les images téléchargées par les utilisateurs. Elle nous permet de convertir les fichiers d'image dans un format utilisable par l'API de Google Generative AI.
+
+---
+
+### 2. Fonctionnalités Développées
+
+#### 2.1. Gestion des Fichiers
+
+L'application gère l'upload de fichiers images et PDF. Chaque fichier est sauvegardé dans un répertoire spécifique (`upload/images` ou `upload/pdfs`), et un nom de fichier unique est généré pour éviter les conflits. Ce nom est basé sur un horodatage, garantissant son unicité.
+
+**Problèmes rencontrés :**
+- **Gestion des conflits de noms de fichiers** : Si plusieurs utilisateurs chargent des fichiers ayant le même nom, cela entraînerait un écrasement. Pour résoudre ce problème, nous avons ajouté un mécanisme pour générer un nom unique basé sur l'horodatage.
+
+**Solution proposée :**
+- La fonction `generate_filename` génère des noms de fichiers uniques en utilisant la date et l'heure actuelles.
+
+#### 2.2. Analyse des Images
+
+Lorsque l'utilisateur charge une image et pose une question à propos de celle-ci, l'application utilise l'API de Google Generative AI pour analyser l'image et répondre à la question. L'image est d'abord sauvegardée, puis chargée pour être envoyée à l'IA.
+
+**Problèmes rencontrés :**
+- **Compatibilité des formats d'image** : L'API ne prend en charge qu'un nombre limité de formats d'image. Nous avons donc limité les formats autorisés à `PNG`, `JPEG`, `WEBP`, `HEIC`, et `HEIF`.
+
+**Solution proposée :**
+- Ajout de la validation des formats d'image dans la fonction de téléchargement d'images pour garantir qu'un fichier valide soit chargé.
+
+#### 2.3. Analyse des PDF
+
+L'analyse des PDF fonctionne de manière similaire à celle des images. L'utilisateur charge un fichier PDF et pose une question. Le fichier est ensuite traité par l'API de Google Generative AI pour en extraire le contenu pertinent et répondre à la question.
+
+**Problèmes rencontrés :**
+- **Grande taille des fichiers PDF** : Les fichiers PDF volumineux peuvent entraîner des erreurs de mémoire ou des temps de traitement longs. Cela peut dégrader l'expérience utilisateur.
+
+**Solution proposée :**
+- Compression des fichiers PDF avant leur envoi à l'API pour garantir des performances optimales.
+
+#### 2.4. Chatbot
+
+Le chatbot permet à l'utilisateur de poser des questions générales, auxquelles l'IA génère des réponses pertinentes. Ce chatbot utilise également l'API de Google Generative AI pour générer du texte en réponse à des questions simples.
+
+**Problèmes rencontrés :**
+- **Limitation des réponses générées** : Les réponses générées par l'IA peuvent parfois manquer de contexte ou être imprécises.
+
+**Solution proposée :**
+- Développement d'un système d'historique permettant de garder une trace des interactions, ce qui permet à l'utilisateur de se référer à des réponses antérieures et d'améliorer l'expérience globale.
+
+---
+
+### 3. Gestion de l'Historique des Interactions
+
+Une fonctionnalité clé de cette application est la gestion de l'historique des interactions avec les utilisateurs. Chaque fois qu'une question est posée, une entrée est ajoutée à l'historique, indiquant le type d'interaction (chat, image, PDF), la question posée, la réponse générée et l'heure de l'interaction.
+
+**Problèmes rencontrés :**
+- **Stockage des interactions** : Le stockage de l'historique dans la mémoire de la session peut entraîner des limitations sur le long terme si le nombre d'interactions devient trop élevé.
+
+**Solution proposée :**
+- Utilisation de la session Streamlit (`st.session_state`) pour stocker l'historique de manière temporaire. Pour de futures améliorations, une solution de stockage persistent pourrait être envisagée (par exemple, une base de données).
+
+---
+
+### 4. Interface Utilisateur
+
+L'interface utilisateur de l'application est construite en utilisant Streamlit, offrant une expérience interactive et simple à utiliser. L'utilisateur peut choisir entre trois modes d'interaction :
+1. **Chatbot** : Pour poser des questions générales.
+2. **Analyse d'image** : Pour poser des questions sur une image téléchargée.
+3. **Analyse de PDF** : Pour poser des questions sur un fichier PDF téléchargé.
+
+**Problèmes rencontrés :**
+- **Performance de l'interface** : L'application peut parfois devenir lente lors du traitement de fichiers volumineux (par exemple, des images haute résolution ou des PDF volumineux).
+
+**Solution proposée :**
+- Ajout d'un système de notifications pour informer l'utilisateur de l'état d'avancement du traitement des fichiers et de l'analyse en cours.
+
+---
+
+### 5. Sécurité
+
+La clé API utilisée pour accéder à l'API de Google Generative AI est incluse dans le code source, ce qui peut poser un problème de sécurité. Cette clé devrait être protégée pour éviter des utilisations malveillantes.
+
+**Problèmes rencontrés :**
+- **Exposition de la clé API** : La clé API est actuellement stockée dans le code source, ce qui pourrait être exploité si l'application est déployée publiquement.
+
+**Solution proposée :**
+- Stockage de la clé API dans des variables d'environnement ou l'utilisation de services de gestion des secrets pour éviter l'exposition.
+
+---
+
+### 6. Conclusion
+
+Le projet a permis de développer une application fonctionnelle pour l'analyse de fichiers PDF et d'images, ainsi qu'un chatbot simple pour des questions générales. L'intégration de l'API de Google Generative AI a fourni des capacités de génération de contenu puissantes et adaptées aux besoins de l'application.
+
+Cependant, plusieurs défis ont été rencontrés, principalement liés à la gestion des fichiers volumineux et à la sécurité de l'API. Des solutions ont été proposées et implémentées pour résoudre ces problèmes, mais il reste encore des améliorations possibles, notamment pour le stockage de l'historique et la gestion des fichiers dans des scénarios à grande échelle.
+
+Le développement de ce projet met en évidence la puissance de l'IA générative et de Streamlit pour créer des applications interactives tout en soulignant l'importance de gérer efficacement la sécurité et la performance des systèmes.
+
+---
+
+### Annexes
+
+1. Code complet de l'application.
+2. Liste des dépendances installées.
+3. Capture d'écran de l'interface utilisateur.
+
+---
