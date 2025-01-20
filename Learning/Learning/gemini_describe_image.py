@@ -4,7 +4,7 @@ from PIL import Image
 import io
 
 # Configuration de l'API Google Generative AI
-GEN_API_KEY = "AIzaSyBmgCgeR2Ak4qZf8NItR-5j_VRsrrng-QY"  # Remplacez par votre clé API
+GEN_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  # Remplacez par votre clé API
 gen_ai.configure(api_key=GEN_API_KEY)
 
 # Titre de l'application
