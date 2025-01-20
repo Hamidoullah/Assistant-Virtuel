@@ -2,7 +2,7 @@ import os
 import google.generativeai as genai
 
 # Configuration de l'API Google Generative AI
-GEN_API_KEY = "AIzaSyBmgCgeR2Ak4qZf8NItR-5j_VRsrrng-QY"  # Remplacez par votre clé API
+GEN_API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  # Remplacez par votre clé API
 genai.configure(api_key=GEN_API_KEY)
 
 imagen = genai.ImageGenerationModel("imagen-3.0-generate-001")
